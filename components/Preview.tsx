@@ -102,8 +102,10 @@ const ContextBlock: React.FC<{ data: ProposalData }> = ({ data }) => (
 
 const SolutionBlock: React.FC<{ data: ProposalData }> = ({ data }) => (
   <section className="overflow-hidden">
-    <h2 className="text-3xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-2">Наше решение</h2>
-    <h3 className="text-xl font-bold text-[var(--theme-color)] mb-3 break-words">{data.solutionTitle}</h3>
+    {/* Static header removed. Replaced by solution title directly. */}
+    <h2 className="text-3xl font-bold text-[var(--theme-color)] mb-6 border-b border-slate-200 pb-2 break-words">
+      {data.solutionTitle}
+    </h2>
     <div className="text-lg text-slate-600 leading-relaxed break-words whitespace-pre-wrap">
       {data.solutionDescription}
     </div>
