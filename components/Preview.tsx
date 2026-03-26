@@ -26,7 +26,7 @@ const RenderTextWithBullets: React.FC<{ text: string }> = ({ text }) => {
 /* --- BLOCKS --- */
 
 const CompanyHeaderBlock: React.FC<{ data: ProposalData }> = ({ data }) => (
-  <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b-2 border-slate-100 pb-6 gap-4">
+  <div className="flex flex-row justify-between items-center mb-8 border-b-2 border-slate-100 pb-6 gap-4">
     <div className={`flex items-center ${data.noLogo ? '' : 'gap-4'}`}>
        {!data.noLogo && (
          data.companyLogo ? (
@@ -42,7 +42,7 @@ const CompanyHeaderBlock: React.FC<{ data: ProposalData }> = ({ data }) => (
          {data.companyWebsite && <a href={data.companyWebsite.startsWith('http') ? data.companyWebsite : `https://${data.companyWebsite}`} target="_blank" rel="noreferrer" className="text-sm text-slate-400 hover:text-[var(--theme-color)] block transition-colors">{data.companyWebsite}</a>}
        </div>
     </div>
-    <div className="flex flex-col items-start md:items-end gap-1">
+    <div className="flex flex-col items-end gap-1">
        {data.companyPhone && (
           <a href={`tel:${data.companyPhone}`} className="text-lg font-bold text-slate-900 hover:text-[var(--theme-color)] flex items-center gap-2 transition-colors">
              {data.companyPhone}
@@ -158,7 +158,7 @@ const CasesHeader: React.FC<{ title: string }> = ({ title }) => (
 const CaseItem: React.FC<{ c: CaseStudy, idx: number }> = ({ c, idx }) => (
   <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm mb-6 break-inside-avoid">
      <div className="flex items-center gap-3 mb-3">
-        <span className="bg-[var(--theme-light)] text-[var(--theme-color)] text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider flex-shrink-0">Кейс {idx+1}</span>
+        <div className="bg-[var(--theme-light)] text-[var(--theme-color)] text-xs font-bold px-3 py-1.5 rounded-full uppercase whitespace-nowrap flex-shrink-0 inline-flex items-center justify-center leading-none">Кейс {idx+1}</div>
         <h4 className="font-bold text-xl text-slate-900 break-words">{c.title}</h4>
      </div>
      {/* Added break-all to prevent long strings from breaking layout */}
@@ -236,9 +236,9 @@ const TariffsBlock: React.FC<{ data: ProposalData }> = ({ data }) => (
 const CTABlock: React.FC<{ data: ProposalData }> = ({ data }) => (
   <footer className="bg-slate-900 text-white p-12 rounded-3xl shadow-xl w-full flex flex-col">
     {/* Company Profile Section (Now First) */}
-    <div className="flex flex-col md:flex-row gap-8 items-stretch mb-10 border-b border-slate-700 pb-10">
+    <div className="flex flex-row gap-8 items-stretch mb-10 border-b border-slate-700 pb-10">
         {/* Left: Company Image */}
-        <div className="w-full md:w-1/3 min-h-[200px] rounded-2xl overflow-hidden border border-slate-700 relative bg-slate-800">
+        <div className="w-1/3 min-h-[200px] rounded-2xl overflow-hidden border border-slate-700 relative bg-slate-800 flex-shrink-0">
              {data.companyFooterImage ? (
                  <div 
                    className="w-full h-full bg-cover bg-center absolute inset-0"
