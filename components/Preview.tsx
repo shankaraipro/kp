@@ -158,7 +158,7 @@ const CasesHeader: React.FC<{ title: string }> = ({ title }) => (
 const CaseItem: React.FC<{ c: CaseStudy, idx: number }> = ({ c, idx }) => (
   <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm mb-6 break-inside-avoid">
      <div className="flex items-center gap-3 mb-3">
-        <div className="bg-[var(--theme-light)] text-[var(--theme-color)] text-xs font-bold px-3 py-1.5 rounded-full uppercase whitespace-nowrap flex-shrink-0 inline-flex items-center justify-center leading-none">Кейс {idx+1}</div>
+        <div className="bg-[var(--theme-light)] text-[var(--theme-color)] text-xs font-bold px-3 h-6 leading-[24px] rounded-full uppercase whitespace-nowrap flex-shrink-0 text-center inline-block">Кейс {idx+1}</div>
         <h4 className="font-bold text-xl text-slate-900 break-words">{c.title}</h4>
      </div>
      {/* Added break-all to prevent long strings from breaking layout */}
@@ -181,7 +181,7 @@ const ReviewItem: React.FC<{ r: Review }> = ({ r }) => (
         style={{ backgroundImage: `url(${r.imageUrl})` }}
       />
     ) : (
-      <div className="w-16 h-16 rounded-full bg-[var(--theme-light)] flex items-center justify-center text-[var(--theme-color)] font-bold flex-shrink-0 text-xl shadow-inner">
+      <div className="w-16 h-16 rounded-full bg-[var(--theme-light)] text-[var(--theme-color)] font-bold flex-shrink-0 text-xl shadow-inner text-center leading-[64px] inline-block">
         {r.author.charAt(0)}
       </div>
     )}
@@ -398,8 +398,8 @@ export const Preview: React.FC<PreviewProps> = ({ data, id }) => {
                      <div className={`mb-6 ${data.processSteps.length > 3 ? 'grid grid-cols-2 gap-x-8 gap-y-4' : 'flex flex-col gap-4'}`}>
                         {data.processSteps.map((step, i) => (
                             <div key={i} className="flex gap-4 items-start break-inside-avoid">
-                                 {/* Added leading-none to prevent vertical shift in PDF export */}
-                                 <div className="flex-shrink-0 w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-sm shadow-lg leading-none">
+                                 {/* Used line-height for perfect vertical centering in PDF export */}
+                                 <div className="flex-shrink-0 w-8 h-8 rounded-full bg-slate-900 text-white font-bold text-sm shadow-lg text-center leading-[32px] inline-block">
                                    {i + 1}
                                  </div>
                                  <div>
