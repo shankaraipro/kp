@@ -228,82 +228,14 @@ export default function App() {
   };
 
   const downloadPDF = async () => {
-    const pages = document.querySelectorAll('.print-page');
-    if (pages.length === 0) return;
-    
-    setIsPdfGenerating(true);
-
-    try {
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-
-      const container = document.createElement('div');
-      container.style.position = 'absolute';
-      container.style.top = '-10000px';
-      container.style.left = '0';
-      // Explicitly set width to match the source to ensure layout consistency
-      container.style.width = '210mm'; 
-      container.style.zIndex = '-1';
-      document.body.appendChild(container);
-
-      for (let i = 0; i < pages.length; i++) {
-        const originalPage = pages[i] as HTMLElement;
-        const clone = originalPage.cloneNode(true) as HTMLElement;
-        
-        // Remove transform and margins to prevent shifting
-        clone.style.transform = 'none';
-        clone.style.margin = '0';
-        clone.style.boxShadow = 'none';
-        
-        // Force text stability and cleanup specific for PDF
-        clone.style.letterSpacing = 'normal';
-        
-        container.appendChild(clone);
-
-        // Allow background images to load/render in the DOM
-        await new Promise(resolve => setTimeout(resolve, 100));
-
-        const canvas = await html2canvas(clone, { 
-          scale: 2, // High resolution
-          useCORS: true,
-          backgroundColor: '#ffffff',
-          logging: false,
-          windowWidth: 794, // Approx A4 width at 96dpi (210mm)
-          scrollX: 0,
-          scrollY: 0,
-          onclone: (doc) => {
-              // Ensure no fonts are shifted by ligatures
-              const elements = doc.getElementsByTagName('*');
-              for (let j = 0; j < elements.length; j++) {
-                  (elements[j] as HTMLElement).style.fontVariantLigatures = 'no-common-ligatures';
-              }
-          }
-        });
-
-        container.removeChild(clone);
-
-        const imgData = canvas.toDataURL('image/jpeg', 0.95);
-        
-        if (i > 0) pdf.addPage();
-        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-      }
-      
-      document.body.removeChild(container);
-      pdf.save('commercial-proposal.pdf');
-    } catch (err) {
-      console.error(err);
-      alert("Ошибка при создании PDF");
-    } finally {
-      setIsPdfGenerating(false);
-    }
+    window.print();
   };
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row bg-slate-100 font-sans">
       
       {/* LEFT PANEL: FORM EDITOR */}
-      <div className="w-full lg:w-1/2 h-screen overflow-y-auto bg-slate-50 border-r border-gray-200 shadow-2xl z-10 custom-scrollbar relative">
+      <div className="w-full lg:w-1/2 h-screen overflow-y-auto bg-slate-50 border-r border-gray-200 shadow-2xl z-10 custom-scrollbar relative no-print">
         <div className="p-8 space-y-8 pb-32">
           
           <header className="mb-8">
@@ -988,78 +920,10 @@ export default function App() {
 
           {/* BLOCK 10: Bonuses & Company Info (Final) */}
           <section className={SECTION_CLASSES}>
-             <SectionHeader icon={Building2} title="11. О Компании и Финал" isVisible={data.showFooter} onToggle={() => toggleVisibility('showFooter')} />
+             <SectionHeader icon={Building2} title="11. Финал и Призыв к действию" isVisible={data.showFooter} onToggle={() => toggleVisibility('showFooter')} />
              
              {data.showFooter && (
                 <>
-                 <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><Briefcase className="w-5 h-5 text-blue-600"/> Подробно о компании</h3>
-
-                <FormRow label="Фото компании/офиса" description="Загрузите фото команды или офиса для левой части блока.">
-                     <div className="flex bg-slate-100 p-1.5 rounded-xl w-full border border-slate-200 mb-2">
-                         <button onClick={() => setFooterImageSourceType('upload')} className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${footerImageSourceType === 'upload' ? 'bg-white shadow-sm' : 'text-slate-500'}`}>Загрузить</button>
-                         {/* AI not implemented for this specifically in state logic above but UI placeholder */}
-                         {/* <button onClick={() => setFooterImageSourceType('ai')} className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${footerImageSourceType === 'ai' ? 'bg-white shadow-sm' : 'text-slate-500'}`}>AI</button> */}
-                     </div>
-                     <div className="relative h-40 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50 hover:bg-slate-100 transition flex items-center justify-center overflow-hidden">
-                         {data.companyFooterImage ? (
-                             <img src={data.companyFooterImage} className="w-full h-full object-cover opacity-80" alt="Footer Preview" />
-                         ) : (
-                             <div className="flex flex-col items-center text-slate-400">
-                                 <ImageIcon className="w-8 h-8 mb-2"/>
-                                 <span className="text-xs font-bold">Нажмите для загрузки</span>
-                             </div>
-                         )}
-                         <input type="file" accept="image/*" onChange={(e) => handleImageUpload('companyFooterImage', e)} className="absolute inset-0 opacity-0 cursor-pointer" />
-                         {data.companyFooterImage && <button onClick={(e) => {e.preventDefault(); updateField('companyFooterImage', null)}} className="absolute top-2 right-2 bg-white rounded-full p-1 shadow text-red-500"><Trash2 className="w-4 h-4"/></button>}
-                     </div>
-                </FormRow>
-
-                <FormRow label="Описание компании" description="Расскажите о себе: опыт, миссия, чем занимаетесь.">
-                    <AutoResizingTextarea
-                        value={data.companyDescription}
-                        onChange={(e: any) => updateField('companyDescription', e.target.value)}
-                        className={INPUT_CLASSES}
-                        placeholder="Мы работаем с 2010 года..."
-                        minHeight={100}
-                    />
-                </FormRow>
-
-                <FormRow label="Цифры и факты" description="4 ключевых показателя.">
-                    <label className="flex items-center gap-2 mb-4 cursor-pointer">
-                        <input type="checkbox" checked={data.showCompanyStats} onChange={(e) => updateField('showCompanyStats', e.target.checked)} className="w-5 h-5 text-blue-600 rounded" />
-                        <span className="text-sm font-bold text-slate-700">Показывать цифры</span>
-                    </label>
-                    {data.showCompanyStats && (
-                        <div className="grid grid-cols-2 gap-4">
-                            {data.companyStats.map((stat, idx) => (
-                                <div key={idx} className="bg-slate-50 p-3 rounded-xl border border-slate-200">
-                                    <input 
-                                        value={stat.value} 
-                                        onChange={(e) => {
-                                            const newStats = [...data.companyStats];
-                                            newStats[idx].value = e.target.value;
-                                            updateField('companyStats', newStats);
-                                        }}
-                                        className="w-full bg-transparent font-black text-xl text-blue-600 mb-1 outline-none placeholder-blue-300"
-                                        placeholder="100+"
-                                    />
-                                    <input 
-                                        value={stat.label} 
-                                        onChange={(e) => {
-                                            const newStats = [...data.companyStats];
-                                            newStats[idx].label = e.target.value;
-                                            updateField('companyStats', newStats);
-                                        }}
-                                        className="w-full bg-transparent text-xs font-bold text-slate-500 uppercase outline-none placeholder-slate-300"
-                                        placeholder="Проектов"
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </FormRow>
-
-                <hr className="my-8 border-slate-200" />
                 <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><Gift className="w-5 h-5 text-purple-600"/> Бонусы и CTA</h3>
 
                 <FormRow label="Бонус" description="Что клиент получит бесплатно при заказе?" vertical={true}>
@@ -1081,10 +945,10 @@ export default function App() {
       </div>
 
       {/* RIGHT PANEL: PREVIEW */}
-      <div className="w-full lg:w-1/2 bg-slate-200 h-screen overflow-hidden relative flex flex-col">
+      <div className="w-full lg:w-1/2 bg-slate-200 h-screen overflow-hidden relative flex flex-col print-container">
         
         {/* Toolbar */}
-        <div className="bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center z-20 shadow-sm">
+        <div className="bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center z-20 shadow-sm no-print">
            <div className="flex items-center gap-4">
               <span className="text-sm font-bold text-slate-700 hidden sm:inline uppercase tracking-wide">Предпросмотр</span>
               <div className="flex items-center gap-1 bg-slate-100 rounded-lg p-1 border border-slate-200">
@@ -1104,8 +968,9 @@ export default function App() {
         </div>
 
         {/* Scrollable Preview Area */}
-        <div className="flex-1 overflow-auto p-8 flex justify-center bg-slate-300 custom-scrollbar">
+        <div className="flex-1 overflow-auto p-8 flex justify-center bg-slate-300 custom-scrollbar print-area">
            <div 
+             className="print-wrapper"
              style={{ 
                transform: `scale(${previewScale})`, 
                transformOrigin: 'top center',

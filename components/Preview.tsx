@@ -26,30 +26,30 @@ const RenderTextWithBullets: React.FC<{ text: string }> = ({ text }) => {
 /* --- BLOCKS --- */
 
 const CompanyHeaderBlock: React.FC<{ data: ProposalData }> = ({ data }) => (
-  <div className="flex flex-row justify-between items-center mb-8 border-b-2 border-slate-100 pb-6 gap-4">
-    <div className={`flex items-center ${data.noLogo ? '' : 'gap-4'}`}>
+  <div className="flex flex-row justify-between items-start mb-8 border-b-2 border-slate-100 pb-6 gap-4 flex-nowrap">
+    <div className={`flex items-center ${data.noLogo ? '' : 'gap-4'} min-w-0`}>
        {!data.noLogo && (
          data.companyLogo ? (
-           <img src={data.companyLogo} alt="Logo" className="h-16 w-auto object-contain" />
+           <img src={data.companyLogo} alt="Logo" className="h-16 w-auto object-contain flex-shrink-0" />
          ) : (
-           <div className="h-16 w-16 bg-slate-100 rounded-lg flex items-center justify-center text-xs text-slate-400 font-bold border border-slate-200">
+           <div className="h-16 w-16 bg-slate-100 rounded-lg flex items-center justify-center text-xs text-slate-400 font-bold border border-slate-200 flex-shrink-0">
              LOGO
            </div>
          )
        )}
-       <div>
-         <h2 className="text-xl font-extrabold text-slate-900 leading-tight">{data.companyName}</h2>
-         {data.companyWebsite && <a href={data.companyWebsite.startsWith('http') ? data.companyWebsite : `https://${data.companyWebsite}`} target="_blank" rel="noreferrer" className="text-sm text-slate-400 hover:text-[var(--theme-color)] block transition-colors">{data.companyWebsite}</a>}
+       <div className="min-w-0">
+         <h2 className="text-xl font-extrabold text-slate-900 leading-tight truncate">{data.companyName}</h2>
+         {data.companyWebsite && <a href={data.companyWebsite.startsWith('http') ? data.companyWebsite : `https://${data.companyWebsite}`} target="_blank" rel="noreferrer" className="text-sm text-slate-400 hover:text-[var(--theme-color)] block transition-colors truncate">{data.companyWebsite}</a>}
        </div>
     </div>
-    <div className="flex flex-col items-end gap-1">
+    <div className="flex flex-col items-end gap-1 flex-shrink-0">
        {data.companyPhone && (
-          <a href={`tel:${data.companyPhone}`} className="text-lg font-bold text-slate-900 hover:text-[var(--theme-color)] flex items-center gap-2 transition-colors">
+          <a href={`tel:${data.companyPhone}`} className="text-lg font-bold text-slate-900 hover:text-[var(--theme-color)] flex items-center gap-2 transition-colors whitespace-nowrap">
              {data.companyPhone}
           </a>
        )}
        {data.companyEmail && (
-          <a href={`mailto:${data.companyEmail}`} className="text-sm font-medium text-slate-500 hover:text-[var(--theme-color)] transition-colors">
+          <a href={`mailto:${data.companyEmail}`} className="text-sm font-medium text-slate-500 hover:text-[var(--theme-color)] transition-colors whitespace-nowrap">
              {data.companyEmail}
           </a>
        )}
@@ -158,7 +158,7 @@ const CasesHeader: React.FC<{ title: string }> = ({ title }) => (
 const CaseItem: React.FC<{ c: CaseStudy, idx: number }> = ({ c, idx }) => (
   <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm mb-6 break-inside-avoid">
      <div className="flex items-center gap-3 mb-3">
-        <div className="bg-[var(--theme-light)] text-[var(--theme-color)] text-xs font-bold px-3 h-6 leading-[24px] rounded-full uppercase whitespace-nowrap flex-shrink-0 text-center inline-block">Кейс {idx+1}</div>
+        <div className="bg-[var(--theme-light)] text-[var(--theme-color)] text-xs font-bold px-3 py-1 rounded-full uppercase whitespace-nowrap flex-shrink-0 flex items-center justify-center">Кейс {idx+1}</div>
         <h4 className="font-bold text-xl text-slate-900 break-words">{c.title}</h4>
      </div>
      {/* Added break-all to prevent long strings from breaking layout */}
@@ -181,7 +181,7 @@ const ReviewItem: React.FC<{ r: Review }> = ({ r }) => (
         style={{ backgroundImage: `url(${r.imageUrl})` }}
       />
     ) : (
-      <div className="w-16 h-16 rounded-full bg-[var(--theme-light)] text-[var(--theme-color)] font-bold flex-shrink-0 text-xl shadow-inner text-center leading-[64px] inline-block">
+      <div className="w-16 h-16 rounded-full bg-[var(--theme-light)] text-[var(--theme-color)] font-bold flex-shrink-0 text-xl shadow-inner flex items-center justify-center">
         {r.author.charAt(0)}
       </div>
     )}
@@ -234,50 +234,8 @@ const TariffsBlock: React.FC<{ data: ProposalData }> = ({ data }) => (
 );
 
 const CTABlock: React.FC<{ data: ProposalData }> = ({ data }) => (
-  <footer className="bg-slate-900 text-white p-12 rounded-3xl shadow-xl w-full flex flex-col">
-    {/* Company Profile Section (Now First) */}
-    <div className="flex flex-row gap-8 items-stretch mb-10 border-b border-slate-700 pb-10">
-        {/* Left: Company Image */}
-        <div className="w-1/3 min-h-[200px] rounded-2xl overflow-hidden border border-slate-700 relative bg-slate-800 flex-shrink-0">
-             {data.companyFooterImage ? (
-                 <div 
-                   className="w-full h-full bg-cover bg-center absolute inset-0"
-                   style={{ backgroundImage: `url(${data.companyFooterImage})` }}
-                 />
-             ) : (
-                 <div className="w-full h-full flex items-center justify-center text-slate-600">
-                     <div className="text-center p-4">
-                         <div className="w-12 h-12 border-2 border-slate-600 rounded-full flex items-center justify-center mx-auto mb-2">
-                            <span className="text-xl font-bold">?</span>
-                         </div>
-                         <span className="text-xs uppercase font-bold">Нет фото</span>
-                     </div>
-                 </div>
-             )}
-        </div>
-
-        {/* Right: Info & Stats */}
-        <div className="flex-1 flex flex-col justify-between">
-             <div>
-                 <div className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-3">О компании</div>
-                 <h3 className="text-2xl font-bold text-white mb-3">{data.companyName}</h3>
-                 <p className="text-slate-300 text-sm leading-relaxed mb-6 whitespace-pre-wrap break-words">{data.companyDescription}</p>
-             </div>
-
-             {data.showCompanyStats && (
-                 <div className="grid grid-cols-2 gap-4">
-                     {data.companyStats.map((stat, idx) => (
-                         <div key={idx} className="bg-white/5 p-4 rounded-xl border border-white/10">
-                             <div className="text-2xl font-black text-[var(--theme-color)] leading-none mb-1 break-all">{stat.value}</div>
-                             <div className="text-xs font-bold text-slate-400 uppercase tracking-wide break-words">{stat.label}</div>
-                         </div>
-                     ))}
-                 </div>
-             )}
-        </div>
-    </div>
-
-    {/* CTA Top Section (Now Second/Bottom) */}
+  <footer className="bg-slate-900 text-white p-12 rounded-3xl shadow-xl w-full flex flex-col justify-center h-full">
+    {/* CTA Top Section */}
     <div className="text-center">
         {data.bonuses && (
         <div className="mb-8 inline-flex items-center gap-3 px-6 py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm">
@@ -398,8 +356,7 @@ export const Preview: React.FC<PreviewProps> = ({ data, id }) => {
                      <div className={`mb-6 ${data.processSteps.length > 3 ? 'grid grid-cols-2 gap-x-8 gap-y-4' : 'flex flex-col gap-4'}`}>
                         {data.processSteps.map((step, i) => (
                             <div key={i} className="flex gap-4 items-start break-inside-avoid">
-                                 {/* Used line-height for perfect vertical centering in PDF export */}
-                                 <div className="flex-shrink-0 w-8 h-8 rounded-full bg-slate-900 text-white font-bold text-sm shadow-lg text-center leading-[32px] inline-block">
+                                 <div className="flex-shrink-0 w-8 h-8 rounded-full bg-slate-900 text-white font-bold text-sm shadow-lg flex items-center justify-center">
                                    {i + 1}
                                  </div>
                                  <div>
@@ -446,13 +403,13 @@ export const Preview: React.FC<PreviewProps> = ({ data, id }) => {
         </div>
       )}
 
-      {/* PAGE 5/6: CTA, Bonus, Company Profile */}
+      {/* PAGE 5/6: CTA, Bonus */}
       <div className="print-page bg-white shadow-2xl mx-auto mb-8 relative flex flex-col justify-center text-center" style={pageStyle}>
           <div className="flex-1 flex flex-col items-center justify-center">
              {data.showFooter && <CTABlock data={data} />}
           </div>
           <div className="absolute bottom-4 right-6 text-xs text-slate-300 font-mono">Page {data.showGallery ? '6' : '5'}</div>
-          <div className="absolute bottom-4 left-6 text-xs text-slate-400 italic">О компании и Действие</div>
+          <div className="absolute bottom-4 left-6 text-xs text-slate-400 italic">Призыв к действию</div>
       </div>
 
     </div>

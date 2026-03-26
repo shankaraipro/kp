@@ -26,23 +26,52 @@
       ::-webkit-scrollbar-thumb:hover {
         background: #94a3b8; 
       }
-      .print-content {
-        background: white;
-        width: 210mm;
-        min-height: 297mm;
-        padding: 20mm;
-        margin: 0 auto;
-        box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      }
       
       @media print {
-        body {
-            background-color: white;
+        @page {
+          size: A4 portrait;
+          margin: 0;
         }
-        .print-content {
-            box-shadow: none;
-            margin: 0;
-            width: 100%;
+        html, body {
+          background-color: white !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          width: 100% !important;
+          height: auto !important;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+        .no-print {
+          display: none !important;
+        }
+        .print-container {
+          width: 100% !important;
+          height: auto !important;
+          overflow: visible !important;
+          background: white !important;
+          display: block !important;
+        }
+        .print-area {
+          overflow: visible !important;
+          padding: 0 !important;
+          background: white !important;
+          display: block !important;
+        }
+        .print-wrapper {
+          transform: none !important;
+          margin: 0 !important;
+        }
+        .print-page {
+          box-shadow: none !important;
+          margin: 0 auto !important;
+          width: 210mm !important;
+          height: 297mm !important;
+          page-break-after: always;
+          page-break-inside: avoid;
+        }
+        /* Hide the last page break to prevent blank pages */
+        .print-page:last-child {
+          page-break-after: auto;
         }
       }
     </style>
