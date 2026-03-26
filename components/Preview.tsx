@@ -449,16 +449,6 @@ export const Preview: React.FC<PreviewProps> = ({ data, id }) => {
       {/* PAGE 5/6: CTA, Bonus, Company Profile */}
       <div className="print-page bg-white shadow-2xl mx-auto mb-8 relative flex flex-col justify-center text-center" style={pageStyle}>
           <div className="flex-1 flex flex-col items-center justify-center">
-             <div className="mb-12">
-                 {!data.noLogo && (
-                    data.companyLogo ? (
-                        <img src={data.companyLogo} alt="Logo" className="h-32 w-auto object-contain mx-auto opacity-70 grayscale hover:grayscale-0 transition-all duration-500" />
-                    ) : (
-                        <div className="text-4xl font-black text-slate-200">LOGO</div>
-                    )
-                 )}
-             </div>
-             
              {data.showFooter && <CTABlock data={data} />}
           </div>
           <div className="absolute bottom-4 right-6 text-xs text-slate-300 font-mono">Page {data.showGallery ? '6' : '5'}</div>
